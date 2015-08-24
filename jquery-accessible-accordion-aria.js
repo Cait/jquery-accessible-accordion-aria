@@ -23,6 +23,7 @@ $(document).ready(function(){
                 var $this = $( this );
                     $options = $this.data(),
                     $accordions_headers = $this.find( ".js-accordion__header" ),
+                    $accordions_toggles = $this.find( ".js-accordion__toggle" ),
                     $accordions_prefix_classes = $options.accordionPrefixClasses || '',
                     $accordions_multiselectable = $options.accordionMultiselectable || '',
                     $index_accordion = index+1 ;
@@ -38,6 +39,16 @@ $(document).ready(function(){
                    $this.attr( "aria-multiselectable", "false" );
                    }
                 
+                // toggle links
+                $accordions_toggles.each( function( index_h ) {
+                	var $that = $( this );
+                	$toggledata = $that.data();
+                	$toggledata.accordionPrefix = $accordions_prefix_classes;
+                	$toggledata.expandText = $that.text();
+                	if(!$toggledata.collapseText) $toggledata.collapseText = "collapse all";
+                });  
+                
+                // accordions
                 $accordions_headers.each( function( index_h ) {
                       var $that = $( this ),
                           $text = $that.text(),
@@ -235,6 +246,32 @@ $(document).ready(function(){
                             }
                }
                
+           })
+           .on( "click", ".js-accordion__toggle", function( event ) {
+		// get this link, its containing accordion div and all of the accordion bits thereof
+		var $this = $( this ),
+		$toggledata = $this.data();	
+		$accordion = $this.closest( "."+$toggledata.accordionPrefix );
+		$all_accordion_headers = $accordion.find( ".js-accordion__header" );
+		$all_accordion_panels = $accordion.find( ".js-accordion__panel" );
+		
+		// shift off of header selection
+		$all_accordion_headers.attr( "aria-selected", "false" );
+
+		// all open or all close
+		if ( $this.text() == $toggledata.expandText ) {
+			$all_accordion_headers.attr( "aria-expanded", "true" );
+			$all_accordion_panels.attr( "aria-hidden", "false" );
+			$this.text( $toggledata.collapseText );
+			}
+		else {
+			$all_accordion_headers.attr( "aria-expanded", "false" );
+			$all_accordion_panels.attr( "aria-hidden", "true" );
+			$this.text( $toggledata.expandText );
+			}	
+			
+		// keep the fake expand/collapse links from trying to do anything else
+		event.preventDefault();
            });
         
         
