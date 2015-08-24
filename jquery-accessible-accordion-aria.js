@@ -5,6 +5,16 @@ $(document).ready(function(){
         * Website: http://a11y.nicolas-hoffmann.net/accordion/
         * License MIT: https://github.com/nico3333fr/jquery-accessible-accordion-aria/blob/master/LICENSE
         */
+        
+       // if the page has a hashtag location to an accordion header, start with it open
+	$anchor=window.location.hash.substring(1);
+	if($anchor) {
+		$headanchor=$( "#"+$anchor+".js-accordion__header" );
+		if($headanchor) {
+			$headanchor.attr( "data-accordion-opened", "true" );
+		}
+	}
+	
         var $accordions = $( ".js-accordion" );
         if ( $accordions.length  ) { // if there are at least one :)
            
@@ -34,6 +44,15 @@ $(document).ready(function(){
                           $accordion_panel = $that.next( ".js-accordion__panel" ),
                           $index_header = index_h+1 ;
                       
+                      // use the existing id of the header if there is one
+                      $accordion_id = $that.attr('id');
+                      if ($accordion_id) {
+                      	$that.removeAttr('id');
+                      }
+                      else {
+                      	$accordion_id = "accordion" + $index_accordion + "_tab" + $index_header;
+                      }
+                      
                       $accordion_panel.prepend( $that.removeClass( "js-accordion__header" ).addClass( $accordions_prefix_classes + "__title" ).attr( "tabindex", "0") );
                           
                       $accordion_header = $( '<button class="js-accordion__header ' + $accordions_prefix_classes + '__header">' + $text + '</button>' );
@@ -43,12 +62,12 @@ $(document).ready(function(){
                             "aria-controls": "accordion" + $index_accordion + "_panel" + $index_header,
                             "aria-expanded": "false",
                             "role": "tab",
-                            "id": "accordion" + $index_accordion + "_tab" + $index_header,
+                            "id": $accordion_id,
                             "tabindex": "-1",
                             "aria-selected": "false"
                       });
                       $accordion_panel.attr({
-                            "aria-labelledby": "accordion" + $index_accordion + "_tab" + $index_header,
+                            "aria-labelledby": $accordion_id,
                             "role": "tabpanel",
                             "id": "accordion" + $index_accordion + "_panel" + $index_header,
                             "aria-hidden": "true"
