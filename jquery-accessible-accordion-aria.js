@@ -10,9 +10,7 @@ $(document).ready(function(){
 	$anchor=window.location.hash.substring(1);
 	if($anchor) {
 		$headanchor=$( "#"+$anchor+".js-accordion__header" );
-		if($headanchor) {
-			$headanchor.attr( "data-accordion-opened", "true" );
-		}
+		if($headanchor) $headanchor.attr( "data-accordion-opened", "true" );
 	}
 	
         var $accordions = $( ".js-accordion" );
@@ -46,13 +44,9 @@ $(document).ready(function(){
                       
                       // use the existing id of the header if there is one
                       $accordion_id = $that.attr('id');
-                      if ($accordion_id) {
-                      	$that.removeAttr('id');
-                      }
-                      else {
-                      	$accordion_id = "accordion" + $index_accordion + "_tab" + $index_header;
-                      }
-                      
+                      if ($accordion_id) $that.removeAttr('id');
+                      else $accordion_id = "accordion" + $index_accordion + "_tab" + $index_header;
+                       
                       $accordion_panel.prepend( $that.removeClass( "js-accordion__header" ).addClass( $accordions_prefix_classes + "__title" ).attr( "tabindex", "0") );
                           
                       $accordion_header = $( '<button class="js-accordion__header ' + $accordions_prefix_classes + '__header">' + $text + '</button>' );
